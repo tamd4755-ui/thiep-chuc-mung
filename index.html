@@ -36,4 +36,171 @@
         }
         h1 {
             font-size: 2.5rem;
-            /* Phông chữ đẹp và hiệu ứng lấp lá
+            /* Phông chữ đẹp và hiệu ứng lấp lánh */
+            font-family: 'Great Vibes', cursive, 'Segoe UI', serif;
+            text-shadow: 0 0 10px rgba(255, 182, 193, 0.8), 0 0 20px rgba(255, 182, 193, 0.5);
+            margin-bottom: 5px;
+            color: #ffe4e1;
+            text-align: center;
+        }
+        p {
+            font-size: 1.3rem;
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        #gift-image-container {
+            width: 80vw;
+            max-width: 400px;
+            height: auto;
+            display: none; /* Ban đầu ẩn */
+            opacity: 0;
+            animation: fadeInImage 1.5s ease-in-out forwards;
+            position: relative;
+            z-index: 11;
+        }
+        #gift-image {
+            width: 100%;
+            height: auto;
+        }
+        @keyframes fadeInImage {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .btn-open {
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #ff69b4, #ffb6c1);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+            transition: all 0.3s ease;
+            position: absolute;
+            bottom: 15vh; /* Cách mép dưới 15% chiều cao màn hình */
+            z-index: 12;
+        }
+        .btn-open:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.9);
+        }
+    </style>
+    <!-- Nhúng thư viện Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Nhúng phông chữ đẹp -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="ui-container" id="ui">
+        <h1>Happy Vietnamese Women's Day 20/10</h1>
+        <p>A little something special just for you!</p>
+        
+        <div id="gift-image-container">
+            <!-- ĐÂY LÀ NƠI BẠN ĐẶT FILE ẢNH BÓ HOA -->
+            <img src="hoa-envelope.png" id="gift-image" alt="Bó hoa tulip 20/10">
+        </div>
+
+        <button class="btn-open" id="btnGift">Mở Quà 🎁</button>
+    </div>
+
+    <script>
+        let scene, camera, renderer, particles;
+        let isOpen = false;
+
+        function init() {
+            const container = document.getElementById('canvas-container');
+            
+            // Tạo Scene & Camera
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 10; // Đẩy camera gần hơn để lấp lánh phủ toàn màn hình
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Bật alpha để nền CSS radial-gradient hiện ra
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Không cần thêm ánh sáng vì chúng ta sử dụng vật liệu điểm
+
+            // Tạo các hạt lấp lánh (Particles)
+            const particleCount = 1500; // Tăng số lượng hạt
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for(let i = 0; i < particleCount * 3; i += 3) {
+                // Phân bố rộng hơn để phủ toàn màn hình
+                positions[i] = (Math.random() - 0.5) * 40;
+                positions[i+1] = (Math.random() - 0.5) * 30;
+                positions[i+2] = (Math.random() - 0.5) * 20;
+
+                // Màu sắc lấp lánh: pha trộn trắng, hồng và vàng nhạt
+                const randomColor = Math.random();
+                if (randomColor < 0.6) { // Trắng
+                    colors[i] = 1; colors[i+1] = 1; colors[i+2] = 1;
+                } else if (randomColor < 0.9) { // Hồng
+                    colors[i] = 1; colors[i+1] = 0.8; colors[i+2] = 0.9;
+                } else { // Vàng nhạt
+                    colors[i] = 1; colors[i+1] = 1; colors[i+2] = 0.8;
+                }
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.12,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending, // Hiệu ứng lấp lánh hơn
+                depthWrite: false
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Xử lý sự kiện bấm nút mở quà
+            document.getElementById('btnGift').addEventListener('click', function() {
+                isOpen = true;
+                this.style.display = 'none'; // Ẩn nút
+
+                // Hiện bó hoa
+                const imageContainer = document.getElementById('gift-image-container');
+                imageContainer.style.display = 'block';
+
+                // Tăng hiệu ứng lấp lánh khi mở
+                material.size = 0.2;
+                material.opacity = 1.0;
+            });
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (particles) {
+                particles.rotation.y += 0.0015;
+                particles.rotation.x += 0.0007;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        init();
+    </script>
+</body>
+</html>
