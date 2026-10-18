@@ -3,204 +3,721 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Món Quà 20/10 Đặc Biệt</title>
+    <title>Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 🌸</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Tone.js for Web Audio Synthesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'chibi-pink': '#FFB7C5',
+                        'chibi-rose': '#FF8095',
+                        'chibi-cream': '#FFF8F0',
+                        'chibi-yellow': '#FFEBB7',
+                        'chibi-purple': '#E8D5C4',
+                        'chibi-text': '#5C3D46'
+                    },
+                    fontFamily: {
+                        'comfortaa': ['Comfortaa', 'cursive'],
+                        'nunito': ['Nunito', 'sans-serif'],
+                        'pacifico': ['Pacifico', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
-            margin: 0;
-            overflow: hidden;
-            /* Nền trời đêm xanh đậm như trong hình */
-            background: radial-gradient(circle at center, #1a237e 0%, #0d1117 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #FFF0F3 0%, #FFD6E0 50%, #FFE5EC 100%);
+            color: #5C3D46;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
-        #canvas-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
+
+        /* Floating Animation */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
         }
-        .ui-container {
+
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 128, 149, 0.4)); }
+            50% { filter: drop-shadow(0 0 22px rgba(255, 128, 149, 0.8)); }
+        }
+
+        @keyframes floatMusicNote {
+            0% { transform: translateY(0) scale(0.8); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.3) rotate(20deg); opacity: 0; }
+        }
+
+        .floating {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        .glow-effect {
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .music-note {
             position: absolute;
+            animation: floatMusicNote 2s ease-out forwards;
+            pointer-events: none;
+            color: #FF4D6D;
+            font-size: 1.5rem;
+            z-index: 50;
+        }
+
+        /* Twinkle lights decoration */
+        .string-light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 10px;
+            animation: twinkle 1.5s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); box-shadow: 0 0 2px #fff; }
+            100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 12px #FFD700; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF0F3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFB7C5;
+            border-radius: 10px;
+        }
+
+        /* Modal Backdrops */
+        .modal-blur {
+            backdrop-filter: blur(8px);
+        }
+
+        /* Particle Canvas overlay */
+        #bgCanvas {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            padding-top: 10vh; /* Cách mép trên 10% chiều cao màn hình */
-            z-index: 10;
+            pointer-events: none;
+            z-index: 1;
         }
-        h1 {
-            font-size: 2.5rem;
-            /* Phông chữ đẹp và hiệu ứng lấp lánh */
-            font-family: 'Great Vibes', cursive, 'Segoe UI', serif;
-            text-shadow: 0 0 10px rgba(255, 182, 193, 0.8), 0 0 20px rgba(255, 182, 193, 0.5);
-            margin-bottom: 5px;
-            color: #ffe4e1;
-            text-align: center;
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 183, 197, 0.5);
+            box-shadow: 0 20px 40px rgba(255, 128, 149, 0.15);
         }
-        p {
-            font-size: 1.3rem;
-            color: #ffffff;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-            margin-bottom: 25px;
-            text-align: center;
+
+        .chibi-btn {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        #gift-image-container {
-            width: 80vw;
-            max-width: 400px;
-            height: auto;
-            display: none; /* Ban đầu ẩn */
-            opacity: 0;
-            animation: fadeInImage 1.5s ease-in-out forwards;
-            position: relative;
-            z-index: 11;
+        .chibi-btn:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(255, 105, 135, 0.3);
         }
-        #gift-image {
-            width: 100%;
-            height: auto;
-        }
-        @keyframes fadeInImage {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .btn-open {
-            padding: 15px 35px;
-            font-size: 1.2rem;
-            background: linear-gradient(45deg, #ff69b4, #ffb6c1);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
-            transition: all 0.3s ease;
-            position: absolute;
-            bottom: 15vh; /* Cách mép dưới 15% chiều cao màn hình */
-            z-index: 12;
-        }
-        .btn-open:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(255, 105, 180, 0.9);
+        .chibi-btn:active {
+            transform: translateY(1px) scale(0.98);
         }
     </style>
-    <!-- Nhúng thư viện Three.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Nhúng phông chữ đẹp -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div id="canvas-container"></div>
-    
-    <div class="ui-container" id="ui">
-        <h1>Happy Vietnamese Women's Day 20/10</h1>
-        <p>A little something special just for you!</p>
-        
-        <div id="gift-image-container">
-            <!-- ĐÂY LÀ NƠI BẠN ĐẶT FILE ẢNH BÓ HOA -->
-            <img src="hoa-envelope.png" id="gift-image" alt="Bó hoa tulip 20/10">
-        </div>
+<body class="relative flex flex-col items-center justify-between min-h-screen py-6 px-4">
 
-        <button class="btn-open" id="btnGift">Mở Quà 🎁</button>
+    <!-- Background Canvas for Falling Hearts & Petals -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Top Decorative String Lights -->
+    <div class="fixed top-0 left-0 w-full flex justify-between items-center pointer-events-none z-20 px-4 py-2">
+        <svg class="absolute top-0 left-0 w-full h-12" preserveAspectRatio="none" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 Q300,90 600,20 T1200,10 L1200,0 L0,0 Z" fill="none" stroke="#E8C5C8" stroke-width="2" stroke-dasharray="6,6"/>
+        </svg>
+        <div class="w-full flex justify-around items-center z-10 pt-2">
+            <span class="string-light bg-yellow-300" style="animation-delay: 0.1s"></span>
+            <span class="string-light bg-pink-300" style="animation-delay: 0.4s"></span>
+            <span class="string-light bg-yellow-200" style="animation-delay: 0.7s"></span>
+            <span class="string-light bg-rose-400" style="animation-delay: 0.2s"></span>
+            <span class="string-light bg-yellow-300" style="animation-delay: 0.9s"></span>
+            <span class="string-light bg-pink-400" style="animation-delay: 0.5s"></span>
+            <span class="string-light bg-yellow-200" style="animation-delay: 0.3s"></span>
+        </div>
     </div>
 
+    <!-- Music Toggle Button (Floating Top-Right) -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="musicToggle" class="chibi-btn bg-white/90 text-chibi-rose p-3.5 rounded-full shadow-lg border-2 border-pink-200 flex items-center justify-center space-x-2 text-sm font-bold">
+            <i id="musicIcon" class="fas fa-music text-lg animate-bounce"></i>
+            <span id="musicText" class="hidden sm:inline">Phát Nhạc Nền</span>
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl z-10 my-auto py-6">
+
+        <!-- Header Title Banner -->
+        <div class="text-center mb-6 relative">
+            <div class="inline-block relative">
+                <span class="text-xs sm:text-sm font-bold tracking-widest text-chibi-rose uppercase bg-pink-100/80 px-3 py-1.5 rounded-full border border-pink-100 shadow-sm mb-2 inline-block">
+                    ✨ Happy Vietnamese Women's Day ✨
+                </span>
+                <h1 class="font-comfortaa text-xl sm:text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-rose-500 to-purple-600 drop-shadow-sm leading-tight p-2 uppercase">
+                    CHÚC MỪNG NGÀY PHỤ NỮ VIỆT NAM
+                </h1>
+                <p class="font-pacifico text-base sm:text-xl text-rose-400 mt-1">
+                    ~ 20 Tháng 10 Rạng Rỡ & Hạnh Húc ~
+                </p>
+            </div>
+        </div>
+
+        <!-- Main Card Section -->
+        <div class="glass-card rounded-3xl p-6 sm:p-10 relative overflow-hidden">
+
+            <!-- Decorative Floating Elements -->
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-pink-200/40 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-rose-200/40 rounded-full blur-2xl"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+
+                <!-- Left Column: Chibi SVG Illustration & Sunset Window Frame -->
+                <div class="md:col-span-5 flex flex-col items-center justify-center relative">
+                    <!-- Sunset Window Canvas Box -->
+                    <div class="w-full max-w-[280px] h-[320px] bg-gradient-to-b from-indigo-300 via-pink-300 to-amber-100 rounded-t-full rounded-b-3xl p-3 shadow-inner border-4 border-white/80 relative flex flex-col items-center justify-end overflow-hidden glow-effect">
+                        
+                        <!-- Floating Moon & Stars in Window -->
+                        <div class="absolute top-6 right-8 text-yellow-200 text-2xl opacity-90 animate-pulse">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div class="absolute top-10 left-8 text-yellow-100 text-xs opacity-70">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="absolute top-14 right-16 text-yellow-100 text-xs opacity-80">
+                            <i class="fas fa-star"></i>
+                        </div>
+
+                        <!-- Chibi Characters SVG Illustration -->
+                        <div class="relative z-10 w-full h-full flex items-end justify-center pb-2">
+                            <svg viewBox="0 0 300 260" class="w-full h-auto drop-shadow-md">
+                                <!-- Soft Floor Shadow -->
+                                <ellipse cx="150" cy="245" rx="110" ry="12" fill="#D8A7B1" opacity="0.4" />
+
+                                <!-- BOY CHIBI (Left Side) -->
+                                <g id="chibi-boy" transform="translate(45, 40)">
+                                    <!-- Body/Shirt -->
+                                    <path d="M 45 130 Q 45 100 65 100 Q 85 100 85 130 Z" fill="#6C5CE7" />
+                                    <!-- Striped Pattern -->
+                                    <path d="M 50 110 L 80 110 M 48 120 L 82 120" stroke="#A29BFE" stroke-width="3" stroke-linecap="round"/>
+                                    <!-- Pants -->
+                                    <rect x="52" y="130" width="12" height="25" rx="4" fill="#2D3436" />
+                                    <rect x="66" y="130" width="12" height="25" rx="4" fill="#2D3436" />
+                                    <!-- Shoes -->
+                                    <ellipse cx="58" cy="157" rx="8" ry="5" fill="#DFE6E9" />
+                                    <ellipse cx="72" cy="157" rx="8" ry="5" fill="#DFE6E9" />
+                                    
+                                    <!-- Arms extending flower -->
+                                    <path d="M 75 110 Q 100 115 115 105" stroke="#FFE0D1" stroke-width="8" stroke-linecap="round" fill="none"/>
+                                    
+                                    <!-- Head -->
+                                    <ellipse cx="65" cy="70" rx="32" ry="28" fill="#FFE0D1" />
+                                    <!-- Blush -->
+                                    <ellipse cx="48" cy="76" rx="6" ry="3" fill="#FF8095" opacity="0.6" />
+                                    <ellipse cx="82" cy="76" rx="6" ry="3" fill="#FF8095" opacity="0.6" />
+                                    <!-- Eyes -->
+                                    <circle cx="52" cy="68" r="4" fill="#2D3436" />
+                                    <circle cx="78" cy="68" r="4" fill="#2D3436" />
+                                    <circle cx="54" cy="66" r="1.5" fill="#FFFFFF" />
+                                    <circle cx="80" cy="66" r="1.5" fill="#FFFFFF" />
+                                    <!-- Smile -->
+                                    <path d="M 60 78 Q 65 84 70 78" stroke="#2D3436" stroke-width="2" stroke-linecap="round" fill="none" />
+                                    <!-- Hair -->
+                                    <path d="M 33 65 Q 35 32 65 32 Q 95 32 97 65 Q 85 40 65 45 Q 45 40 33 65 Z" fill="#2D3436" />
+                                    <path d="M 55 35 Q 60 25 70 32" stroke="#2D3436" stroke-width="4" stroke-linecap="round"/>
+                                </g>
+
+                                <!-- FLOWER BOUQUET Held by Boy -->
+                                <g id="flower-bouquet" transform="translate(150, 135)">
+                                    <!-- Wrapper -->
+                                    <path d="M 0 10 L 15 -15 L -15 -15 Z" fill="#FFEAA7" stroke="#FDCB6E" stroke-width="1.5"/>
+                                    <!-- Roses/Flowers -->
+                                    <circle cx="-8" cy="-20" r="8" fill="#FF7675" />
+                                    <circle cx="8" cy="-20" r="8" fill="#FD79A8" />
+                                    <circle cx="0" cy="-28" r="9" fill="#E84393" />
+                                    <circle cx="-2" cy="-28" r="4" fill="#FFB7C5" />
+                                    <circle cx="-6" cy="-20" r="3" fill="#FFC312" />
+                                    <circle cx="10" cy="-20" r="3" fill="#FFF" />
+                                    <!-- Leaves -->
+                                    <path d="M -16 -22 Q -22 -28 -15 -32 Z" fill="#55EFC4" />
+                                    <path d="M 16 -22 Q 22 -28 15 -32 Z" fill="#55EFC4" />
+                                </g>
+
+                                <!-- GIRL CHIBI (Right Side) -->
+                                <g id="chibi-girl" transform="translate(155, 40)">
+                                    <!-- Long Hair (Back) -->
+                                    <path d="M 35 60 Q 15 110 35 140 Q 65 145 95 140 Q 115 110 95 60 Z" fill="#4A302C" />
+                                    
+                                    <!-- Dress -->
+                                    <path d="M 48 125 Q 40 100 65 100 Q 90 100 82 125 Z" fill="#FF7675" />
+                                    <path d="M 45 125 Q 65 135 85 125 L 90 145 Q 65 155 40 145 Z" fill="#FAB1A0" />
+                                    <!-- Legs -->
+                                    <rect x="54" y="142" width="8" height="18" rx="3" fill="#FFE0D1" />
+                                    <rect x="68" y="142" width="8" height="18" rx="3" fill="#FFE0D1" />
+                                    <!-- Shoes -->
+                                    <ellipse cx="58" cy="160" rx="6" ry="4" fill="#E84393" />
+                                    <ellipse cx="72" cy="160" rx="6" ry="4" fill="#E84393" />
+
+                                    <!-- Arms receiving bouquet -->
+                                    <path d="M 48 108 Q 30 115 15 110" stroke="#FFE0D1" stroke-width="7" stroke-linecap="round" fill="none"/>
+
+                                    <!-- Head -->
+                                    <ellipse cx="65" cy="70" rx="30" ry="26" fill="#FFE0D1" />
+                                    <!-- Blush -->
+                                    <ellipse cx="48" cy="76" rx="6" ry="3.5" fill="#FF7675" opacity="0.7" />
+                                    <ellipse cx="82" cy="76" rx="6" ry="3.5" fill="#FF7675" opacity="0.7" />
+                                    <!-- Happy Closed Eyes (^ ^) -->
+                                    <path d="M 48 68 Q 53 62 58 68" stroke="#2D3436" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                                    <path d="M 72 68 Q 77 62 82 68" stroke="#2D3436" stroke-width="2.5" stroke-linecap="round" fill="none" />
+                                    <!-- Cute Smile -->
+                                    <path d="M 60 78 Q 65 85 70 78" fill="#E84393" />
+                                    <!-- Front Bangs Hair -->
+                                    <path d="M 35 65 Q 38 35 65 35 Q 92 35 95 65 Q 80 50 65 52 Q 50 50 35 65 Z" fill="#5C3A21" />
+                                    <!-- Bow Ribbon on Hair -->
+                                    <path d="M 80 38 Q 88 30 92 40 Z M 80 38 Q 88 46 92 38 Z" fill="#FD79A8" />
+                                    <circle cx="80" cy="38" r="3" fill="#FFEAA7" />
+                                </g>
+
+                                <!-- Floating Hearts Above Couple -->
+                                <g id="floating-hearts">
+                                    <path d="M 145 40 Q 145 32 152 32 Q 157 32 157 38 Q 157 46 145 54 Q 133 46 133 38 Q 133 32 138 32 Q 145 32 145 40 Z" fill="#FF4D6D" class="floating" style="animation-delay: 0s;">
+                                        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-8; 0,0" dur="2s" repeatCount="indefinite"/>
+                                    </path>
+                                    <path d="M 120 60 Q 120 54 125 54 Q 129 54 129 58 Q 129 64 120 70 Q 111 64 111 58 Q 111 54 115 54 Q 120 54 120 60 Z" fill="#FF8095" opacity="0.8">
+                                        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-10; 0,0" dur="2.5s" repeatCount="indefinite"/>
+                                    </path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Romantic Wish Content & Countdown -->
+                <div class="md:col-span-7 flex flex-col justify-center space-y-5 text-center md:text-left">
+
+                    <!-- Special Greeting Tag -->
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-600 border border-rose-200">
+                            <i class="fas fa-heart text-xs"></i> Lời chúc ý nghĩa ngày 20/10
+                        </span>
+                    </div>
+
+                    <!-- Heartfelt Wish Box -->
+                    <div class="bg-white/90 p-5 sm:p-6 rounded-2xl border border-pink-100 shadow-sm relative">
+                        <i class="fas fa-quote-left text-2xl text-pink-200 absolute top-3 left-3"></i>
+                        <p id="wishText" class="text-gray-700 font-medium text-base sm:text-lg leading-relaxed pt-2 px-3 italic">
+                            "Nhân ngày Phụ nữ Việt Nam 20/10, xin gửi những lời chúc tốt đẹp nhất đến tất cả những người phụ nữ tuyệt vời! Chúc một nửa thế giới luôn xinh đẹp, rạng rỡ, tràn ngập niềm vui và luôn cảm nhận được thật nhiều tình yêu thương cùng sự trân trọng mỗi ngày!"
+                        </p>
+                        <i class="fas fa-quote-right text-2xl text-pink-200 absolute bottom-3 right-3"></i>
+                    </div>
+
+                    <!-- Live Countdown Timer -->
+                    <div class="bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-purple-500/10 p-4 rounded-2xl border border-pink-200/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+                        <div class="flex items-center gap-2 text-rose-600 font-bold text-sm">
+                            <i class="fas fa-clock text-lg animate-spin" style="animation-duration: 8s;"></i>
+                            <span id="countdownTitle">Đếm ngược đến 20/10:</span>
+                        </div>
+                        <div id="countdown" class="flex gap-2 text-center font-bold font-comfortaa">
+                            <div class="bg-white px-2.5 py-1 rounded-lg border border-pink-200 min-w-[45px]">
+                                <span id="days" class="text-rose-500 text-lg block leading-none">00</span>
+                                <span class="text-[10px] text-gray-400 uppercase">Ngày</span>
+                            </div>
+                            <div class="bg-white px-2.5 py-1 rounded-lg border border-pink-200 min-w-[45px]">
+                                <span id="hours" class="text-rose-500 text-lg block leading-none">00</span>
+                                <span class="text-[10px] text-gray-400 uppercase">Giờ</span>
+                            </div>
+                            <div class="bg-white px-2.5 py-1 rounded-lg border border-pink-200 min-w-[45px]">
+                                <span id="minutes" class="text-rose-500 text-lg block leading-none">00</span>
+                                <span class="text-[10px] text-gray-400 uppercase">Phút</span>
+                            </div>
+                            <div class="bg-white px-2.5 py-1 rounded-lg border border-pink-200 min-w-[45px]">
+                                <span id="seconds" class="text-rose-500 text-lg block leading-none">00</span>
+                                <span class="text-[10px] text-gray-400 uppercase">Giây</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Buttons Group -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                        
+                        <!-- Button 1: Send Love -->
+                        <button id="btnLove" class="chibi-btn bg-gradient-to-r from-pink-400 to-rose-500 text-white font-bold py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 text-sm">
+                            <i class="fas fa-heart text-yellow-200"></i>
+                            <span>Gửi Yêu Thương</span>
+                        </button>
+
+                        <!-- Button 2: Secret Gift Box -->
+                        <button id="btnGift" class="chibi-btn bg-gradient-to-r from-amber-400 to-orange-400 text-white font-bold py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 text-sm">
+                            <i class="fas fa-gift text-yellow-100"></i>
+                            <span>Hộp Quà Bí Mật</span>
+                        </button>
+
+                        <!-- Button 3: Play Cute Song Phrase -->
+                        <button id="btnSong" class="chibi-btn bg-gradient-to-r from-purple-400 to-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-md flex items-center justify-center gap-2 text-sm relative overflow-hidden">
+                            <i class="fas fa-music text-pink-200"></i>
+                            <span>Hát Cho Bạn Nghe</span>
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative text-center text-xs text-rose-500/80 font-semibold py-2 z-10 w-full">
+        <span>Gửi trọn yêu thương & trân trọng nhân ngày Phụ Nữ Việt Nam 20/10 ❤️</span>
+        <!-- Copyright notice at bottom-right corner -->
+        <span class="absolute right-4 bottom-2 text-[11px] text-rose-400/60 font-normal tracking-wide select-none">
+            © Đặng Tâm
+        </span>
+    </footer>
+
+    <!-- MODAL: Secret Gift Box -->
+    <div id="giftModal" class="fixed inset-0 bg-black/50 modal-blur z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border-4 border-pink-200 relative transform scale-90 transition-transform duration-300" id="giftModalCard">
+            <!-- Close Button -->
+            <button id="closeGiftModal" class="absolute top-3 right-3 text-gray-400 hover:text-rose-500 w-8 h-8 rounded-full flex items-center justify-center bg-gray-100">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Animated Flower/Gift Icon -->
+            <div class="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-pink-300 glow-effect">
+                <span class="text-5xl animate-bounce">💐</span>
+            </div>
+
+            <h3 class="font-comfortaa font-bold text-xl text-rose-600 mb-2">Món Quà Ý Nghĩa!</h3>
+            <p class="text-gray-600 text-sm mb-6 leading-relaxed">
+                "Dành tặng những bông hoa tươi thắm nhất đến phái đẹp! 🌸✨<br>
+                Chúc bạn luôn hạnh phúc, tràn đầy năng lượng và gặt hái thật nhiều thành công trong cuộc sống!"
+            </p>
+
+            <button id="giftAckBtn" class="chibi-btn w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold py-2.5 rounded-xl shadow">
+                Cảm ơn rất nhiều! 🥰
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
     <script>
-        let scene, camera, renderer, particles;
-        let isOpen = false;
+        /* --------------------------------------------------
+         * 1. Canvas Falling Particles (Petals & Hearts)
+         * -------------------------------------------------- */
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
 
-        function init() {
-            const container = document.getElementById('canvas-container');
-            
-            // Tạo Scene & Camera
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 10; // Đẩy camera gần hơn để lấp lánh phủ toàn màn hình
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
 
-            // Renderer
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Bật alpha để nền CSS radial-gradient hiện ra
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            container.appendChild(renderer.domElement);
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
 
-            // Không cần thêm ánh sáng vì chúng ta sử dụng vật liệu điểm
+        const particleTypes = ['🌸', '💖', '✨', '🌺', '💕'];
+        const particles = [];
 
-            // Tạo các hạt lấp lánh (Particles)
-            const particleCount = 1500; // Tăng số lượng hạt
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
+        class Particle {
+            constructor() {
+                this.reset();
+            }
 
-            for(let i = 0; i < particleCount * 3; i += 3) {
-                // Phân bố rộng hơn để phủ toàn màn hình
-                positions[i] = (Math.random() - 0.5) * 40;
-                positions[i+1] = (Math.random() - 0.5) * 30;
-                positions[i+2] = (Math.random() - 0.5) * 20;
+            reset() {
+                this.x = Math.random() * width;
+                this.y = -20;
+                this.size = Math.random() * 16 + 10;
+                this.speedY = Math.random() * 1.5 + 0.8;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.symbol = particleTypes[Math.floor(Math.random() * particleTypes.length)];
+                this.rotation = Math.random() * 360;
+                this.rotSpeed = (Math.random() - 0.5) * 2;
+                this.opacity = Math.random() * 0.7 + 0.3;
+            }
 
-                // Màu sắc lấp lánh: pha trộn trắng, hồng và vàng nhạt
-                const randomColor = Math.random();
-                if (randomColor < 0.6) { // Trắng
-                    colors[i] = 1; colors[i+1] = 1; colors[i+2] = 1;
-                } else if (randomColor < 0.9) { // Hồng
-                    colors[i] = 1; colors[i+1] = 0.8; colors[i+2] = 0.9;
-                } else { // Vàng nhạt
-                    colors[i] = 1; colors[i+1] = 1; colors[i+2] = 0.8;
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotSpeed;
+
+                if (this.y > height + 20) {
+                    this.reset();
                 }
             }
 
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            const material = new THREE.PointsMaterial({
-                size: 0.12,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending, // Hiệu ứng lấp lánh hơn
-                depthWrite: false
-            });
-
-            particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-
-            // Xử lý sự kiện bấm nút mở quà
-            document.getElementById('btnGift').addEventListener('click', function() {
-                isOpen = true;
-                this.style.display = 'none'; // Ẩn nút
-
-                // Hiện bó hoa
-                const imageContainer = document.getElementById('gift-image-container');
-                imageContainer.style.display = 'block';
-
-                // Tăng hiệu ứng lấp lánh khi mở
-                material.size = 0.2;
-                material.opacity = 1.0;
-            });
-
-            window.addEventListener('resize', onWindowResize);
-            animate();
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+                ctx.font = `${this.size}px serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.symbol, 0, 0);
+                ctx.restore();
+            }
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
+        // Initialize particles
+        for (let i = 0; i < 35; i++) {
+            particles.push(new Particle());
+        }
 
-            if (particles) {
-                particles.rotation.y += 0.0015;
-                particles.rotation.x += 0.0007;
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+
+        /* --------------------------------------------------
+         * 2. Background Music & Melody Synth (Tone.js)
+         * -------------------------------------------------- */
+        let isMusicPlaying = false;
+        let polySynth = null;
+        let backgroundLoop = null;
+
+        function initSynth() {
+            if (!polySynth) {
+                polySynth = new Tone.PolySynth(Tone.Synth, {
+                    oscillator: { type: "triangle" },
+                    envelope: { attack: 0.1, decay: 0.3, sustain: 0.4, release: 1.2 }
+                }).toDestination();
+                polySynth.volume.value = -12; // Gentle background volume
+            }
+        }
+
+        // Soft melodic background chord progression
+        const bgChords = [
+            ["C4", "E4", "G4", "B4"],
+            ["A3", "C4", "E4", "G4"],
+            ["F3", "A3", "C4", "E4"],
+            ["G3", "B3", "D4", "F4"]
+        ];
+
+        let chordIndex = 0;
+
+        function startBackgroundMusic() {
+            Tone.start();
+            initSynth();
+            if (backgroundLoop) clearInterval(backgroundLoop);
+
+            // Play gentle chord sequence every 2.5s
+            backgroundLoop = setInterval(() => {
+                if (isMusicPlaying && polySynth) {
+                    const chord = bgChords[chordIndex % bgChords.length];
+                    polySynth.triggerAttackRelease(chord, "2n");
+                    chordIndex++;
+                }
+            }, 2500);
+        }
+
+        const musicToggleBtn = document.getElementById('musicToggle');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+
+        musicToggleBtn.addEventListener('click', () => {
+            isMusicPlaying = !isMusicPlaying;
+            if (isMusicPlaying) {
+                startBackgroundMusic();
+                musicIcon.className = "fas fa-heart text-lg text-rose-500 animate-spin";
+                musicText.innerText = "Tắt Nhạc Nền";
+                musicToggleBtn.classList.add("border-rose-400", "bg-rose-50");
+            } else {
+                if (backgroundLoop) clearInterval(backgroundLoop);
+                musicIcon.className = "fas fa-music text-lg";
+                musicText.innerText = "Phát Nhạc Nền";
+                musicToggleBtn.classList.remove("border-rose-400", "bg-rose-50");
+            }
+        });
+
+
+        /* --------------------------------------------------
+         * 3. Countdown Timer to October 20
+         * -------------------------------------------------- */
+        function updateCountdown() {
+            const now = new Date();
+            let targetYear = now.getFullYear();
+            
+            // Set target to Oct 20 of current year
+            let targetDate = new Date(targetYear, 9, 20, 0, 0, 0); // Month is 0-indexed (9 = Oct)
+
+            // If past Oct 20 this year, target next year
+            if (now > new Date(targetYear, 9, 20, 23, 59, 59)) {
+                targetDate = new Date(targetYear + 1, 9, 20, 0, 0, 0);
             }
 
-            renderer.render(scene, camera);
+            const diff = targetDate - now;
+
+            if (now.getMonth() === 9 && now.getDate() === 20) {
+                document.getElementById('countdownTitle').innerText = "Hôm nay là 20/10! 🎉";
+                document.getElementById('days').innerText = "20";
+                document.getElementById('hours').innerText = "10";
+                document.getElementById('minutes').innerText = "❤️";
+                document.getElementById('seconds').innerText = "✨";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / 1000 / 60) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+
+        /* --------------------------------------------------
+         * 4. Interactive Buttons Logic
+         * -------------------------------------------------- */
+
+        // Button 1: Send Extra Love (Confetti + Burst)
+        document.getElementById('btnLove').addEventListener('click', (e) => {
+            // Trigger Confetti explosion
+            confetti({
+                particleCount: 80,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FF8095', '#FFB7C5', '#FFC312', '#E84393']
+            });
+
+            // Create floating music notes / hearts near button
+            createFloatingNote(e.clientX, e.clientY, "💖");
+            createFloatingNote(e.clientX + 30, e.clientY - 20, "🌸");
+        });
+
+        // Button 2: Secret Gift Box Modal
+        const giftModal = document.getElementById('giftModal');
+        const giftModalCard = document.getElementById('giftModalCard');
+        const btnGift = document.getElementById('btnGift');
+        const closeGiftModal = document.getElementById('closeGiftModal');
+        const giftAckBtn = document.getElementById('giftAckBtn');
+
+        function openModal() {
+            giftModal.classList.remove('hidden');
+            setTimeout(() => {
+                giftModal.classList.remove('opacity-0');
+                giftModalCard.classList.remove('scale-90');
+                giftModalCard.classList.add('scale-100');
+            }, 10);
+
+            // Trigger soft celebration confetti
+            confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 }
+            });
+            confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 }
+            });
         }
 
-        init();
+        function closeModal() {
+            giftModal.classList.add('opacity-0');
+            giftModalCard.classList.remove('scale-100');
+            giftModalCard.classList.add('scale-90');
+            setTimeout(() => {
+                giftModal.classList.add('hidden');
+            }, 300);
+        }
+
+        btnGift.addEventListener('click', openModal);
+        closeGiftModal.addEventListener('click', closeModal);
+        giftAckBtn.addEventListener('click', closeModal);
+
+
+        // Button 3: Play Cute Song Phrase ("Em vui vì đối với em...")
+        const btnSong = document.getElementById('btnSong');
+
+        btnSong.addEventListener('click', (e) => {
+            Tone.start();
+            initSynth();
+
+            // Notes representation for melody ("Em vui vì đối với em, em là đóa hoa đẹp nhất")
+            const melodyNotes = [
+                { note: "G4", dur: "8n" },
+                { note: "A4", dur: "8n" },
+                { note: "B4", dur: "8n" },
+                { note: "C5", dur: "4n" },
+                { note: "B4", dur: "8n" },
+                { note: "A4", dur: "8n" },
+                { note: "G4", dur: "4n" },
+                { note: "E4", dur: "4n" },
+                { note: "G4", dur: "2n" }
+            ];
+
+            let now = Tone.now();
+            melodyNotes.forEach((item, idx) => {
+                polySynth.triggerAttackRelease(item.note, item.dur, now + idx * 0.28);
+            });
+
+            // Visual effect: Floating musical notes
+            const icons = ['🎵', '🎶', '🌸', '✨'];
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                    createFloatingNote(
+                        e.clientX + (Math.random() * 80 - 40),
+                        e.clientY + (Math.random() * 40 - 20),
+                        randomIcon
+                    );
+                }, i * 200);
+            }
+        });
+
+        // Helper function for floating icons/notes on click
+        function createFloatingNote(x, y, char) {
+            const note = document.createElement('div');
+            note.className = 'music-note';
+            note.innerText = char;
+            note.style.left = `${x}px`;
+            note.style.top = `${y}px`;
+            document.body.appendChild(note);
+
+            setTimeout(() => {
+                note.remove();
+            }, 2000);
+        }
     </script>
 </body>
 </html>
